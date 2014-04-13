@@ -1,0 +1,1 @@
+This repo holds a simple basic web service script for test purpose only.
