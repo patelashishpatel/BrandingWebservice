@@ -35,7 +35,7 @@ Class BrandingWebservice {
 
         // check if the request method is allowed or not
         $status = $this->_validateRequestMethod();
-        
+
         // set HTTP response status header
         header("HTTP/1.1 $status {$this->_httpResponseCodes[$status]}");
 
@@ -43,11 +43,20 @@ Class BrandingWebservice {
         $response = $this->processRequest();
 
         // encode response to json
-        echo json_encode($response);
+        $jsonData = json_encode($response);
+
+        // lets expend the webservice to implement JSONP request
+        if (isset($_GET['callback'])) {
+            // jsonp response
+            echo $_GET['callback']."(".$jsonData.")";
+        } else {
+            // json response
+            echo $jsonData;
+        }
     }
 
     protected function processRequest() {
-        
+
         return (isset($this->_universities[$_GET['name']])) ? $this->_universities[$_GET['name']] : null;
     }
 
@@ -57,7 +66,7 @@ Class BrandingWebservice {
         } else {
             $status = 405;  // request method not allowed
         }
-        
+
         return $status;
     }
 
